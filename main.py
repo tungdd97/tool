@@ -42,10 +42,9 @@ split_url = url.split('https://')
 url_sub = "https://" + username + ":" + password + "@" + split_url[1]
 
 url_sub2 = url_sub.split('/#')
-# driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
 edge_options = webdriver.ChromeOptions()
-# edge_options.add_argument("--headless")
-driver = webdriver.Chrome()
+edge_options.add_argument("--headless")
+driver = webdriver.Chrome(edge_options)
 driver.get(url_sub)
 
 timeout = 100
@@ -56,7 +55,6 @@ except TimeoutException:
     print("Timed out waiting for page to load")
 finally:
     print("Page loaded")
-# driver.implicitly_wait(20)
 
 html = driver.page_source
 
@@ -70,20 +68,18 @@ for c in soup.find_all('link'):
     c['href'] = c['href'].replace('css/', apiName[0] + '/css/')
 for d in soup.find_all('link'):
     d['href'] = d['href'].replace('img/', apiName[0] + '/img/')
-# for d in soup.find_all('link'):
-#     d['href'] = d['href'].replace('https', 'http')
+
 
 body = soup.find('div', {'id': apiName[1]})
 
 head = soup.find('head')
 
 result = str(head) + str(body)
-# print(result)
+print(url_sub)
 
 with open(apiName[1] + ".html", "w", encoding="UTF-8") as f:
     f.write(result)
-# #
+#
 pdfkit.from_file(apiName[1] + ".html", apiName[1]+".pdf")
 
-# with open(apiName[1] + ".html", "wb") as f:
-#     f.write(img2pdf.convert('test.pdf'))
+
